@@ -1,101 +1,165 @@
 <!DOCTYPE html>
 <html>
-
 <head>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{--accent:#00f0ff;}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background:#0b0b0b;
+      color:#fff;
+      text-align:center;
+    }
+    header{padding:18px 12px;}
+    h1{margin:6px 0 2px;font-size:36px;letter-spacing:3px}
+    p.sub{margin:0 0 12px;color:#cfcfcf}
 
-<script type="module"
-src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-</script>
+    .controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:12px}
+    .controls button{
+      background:var(--accent);
+      color:#000;
+      border:0;padding:10px 16px;border-radius:18px;font-weight:700;
+      cursor:pointer;min-width:110px;
+    }
 
-<style>
+    /* viewer area */
+    .viewer-wrap{max-width:1100px;margin:8px auto;border-radius:8px;overflow:hidden;background:#fff;}
+    model-viewer{width:100%;height:72vh;display:block;background:#fff;}
 
-body{
-background:black;
-color:white;
-font-family:sans-serif;
-text-align:center;
-margin:0;
-}
+    /* overlay */
+    .overlay{
+      position:fixed;left:12px;bottom:12px;background:rgba(0,0,0,.6);color:#fff;padding:8px 12px;border-radius:12px;font-size:13px;
+      display:flex;gap:8px;align-items:center;z-index:30;
+    }
+    .spinner{width:18px;height:18px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:var(--accent);animation:spin .9s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
 
-h1{
-font-size:40px;
-margin-top:20px;
-}
-
-button{
-padding:12px 18px;
-margin:8px;
-border:none;
-border-radius:20px;
-background:#00eaff;
-color:black;
-font-weight:bold;
-}
-
-model-viewer{
-width:100%;
-height:75vh;
-}
-
-</style>
-
+    /* small note */
+    .note{font-size:13px;color:#a9a9a9;margin-bottom:18px}
+    @media (max-width:420px){ h1{font-size:28px} }
+  </style>
 </head>
 
 <body>
+  <header>
+    <h1>EYEAI.CO</h1>
+    <p class="sub">Futuristic AR robots — tap a name to load model, then use the AR icon to view in AR</p>
+  </header>
 
-<h1>EYEAI.CO</h1>
+  <div class="controls" id="controls">
+    <!-- 4 buttons; change labels if you want -->
+    <button data-id="meta" onclick="loadRobot('meta')">META AI</button>
+    <button data-id="neuron" onclick="loadRobot('neuron')">NEURON X</button>
+    <button data-id="omega" onclick="loadRobot('omega')">OMEGA BOT</button>
+    <button data-id="zentra" onclick="loadRobot('zentra')">ZENTRA</button>
+  </div>
 
-<button onclick="meta()">META AI (AR)</button>
-<button onclick="neuron()">NEURON X (AR)</button>
-<button onclick="omega()">OMEGA BOT</button>
-<button onclick="zentra()">ZENTRA</button>
+  <div class="viewer-wrap">
+    <!-- default src is the first robot; replace with your real URLs or relative filenames -->
+    <model-viewer id="viewer"
+      src="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb"
+      ios-src="https://modelviewer.dev/shared-assets/models/RobotExpressive.usdz"
+      alt="3D robot model"
+      ar
+      ar-modes="scene-viewer webxr quick-look"
+      camera-controls
+      auto-rotate
+      shadow-intensity="1">
+    </model-viewer>
+  </div>
 
-<model-viewer
-id="viewer"
-src="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb"
-ar
-camera-controls
-auto-rotate>
-</model-viewer>
+  <div class="note">Tip: For AR on iPhone use Safari (Quick Look). For Android use Chrome (Scene Viewer / WebXR).</div>
+
+  <div id="overlay" class="overlay" style="display:none">
+    <div class="spinner"></div>
+    <div id="statusText">Loading model…</div>
+  </div>
 
 <script>
+/*
+  HOW TO USE:
+  - Replace the URLs below with your actual .glb (and optional .usdz) URLs.
+    If you uploaded files to GitHub, the raw URL format is:
+      https://raw.githubusercontent.com/YOURUSERNAME/REPO/main/robot-meta.glb
+    or use relative paths if files are in same repo root (robot-meta.glb)
+*/
 
-function meta(){
+const MODELS = {
+  meta: {
+    name: "META AI",
+    glb: "https://modelviewer.dev/shared-assets/models/RobotExpressive.glb",
+    usdz: "https://modelviewer.dev/shared-assets/models/RobotExpressive.usdz"
+  },
+  neuron: {
+    name: "NEURON X",
+    // replace with your own realistic robot .glb url
+    glb: "https://modelviewer.dev/shared-assets/models/RobotExpressive.glb",
+    usdz: "https://modelviewer.dev/shared-assets/models/RobotExpressive.usdz"
+  },
+  omega: {
+    name: "OMEGA BOT",
+    glb: "https://modelviewer.dev/shared-assets/models/RobotExpressive.glb",
+    usdz: "https://modelviewer.dev/shared-assets/models/RobotExpressive.usdz"
+  },
+  zentra: {
+    name: "ZENTRA",
+    glb: "https://modelviewer.dev/shared-assets/models/RobotExpressive.glb",
+    usdz: "https://modelviewer.dev/shared-assets/models/RobotExpressive.usdz"
+  }
+};
 
-viewer.src="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb"
+const viewer = document.getElementById('viewer');
+const overlay = document.getElementById('overlay');
+const statusText = document.getElementById('statusText');
 
-viewer.setAttribute("ar","")
-
+function showLoading(text='Loading model…'){
+  statusText.textContent = text;
+  overlay.style.display = 'flex';
 }
 
-function neuron(){
-
-viewer.src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
-
-viewer.setAttribute("ar","")
-
+function hideLoading(){
+  overlay.style.display = 'none';
 }
 
-function omega(){
+function loadRobot(key){
+  const m = MODELS[key];
+  if(!m){ alert('Model not found'); return; }
 
-viewer.src="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb"
+  showLoading('Loading ' + (m.name || 'model') + ' …');
 
-viewer.removeAttribute("ar")
-
+  // set src and ios-src cleanly
+  viewer.pause(); // stop any animation while swapping
+  viewer.removeAttribute('src'); // remove old
+  // small delay helps some browsers - not strictly required
+  setTimeout(()=> {
+    viewer.setAttribute('src', m.glb);
+    if(m.usdz){
+      viewer.setAttribute('ios-src', m.usdz);
+    } else {
+      viewer.removeAttribute('ios-src');
+    }
+  }, 50);
 }
 
-function zentra(){
+// model-viewer events: loaded & error
+viewer.addEventListener('load', (e)=>{
+  hideLoading();
+});
+viewer.addEventListener('error', (e)=>{
+  hideLoading();
+  console.error('model-viewer error', e);
+  alert('Model failed to load. Check the .glb URL in the code and that file is public.');
+});
 
-viewer.src="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb"
-
-viewer.removeAttribute("ar")
-
-}
-
+// OPTIONAL: auto-load first model button on page ready
+window.addEventListener('DOMContentLoaded', ()=> {
+  // load first key (meta) so page shows something
+  loadRobot('meta');
+});
 </script>
 
 </body>
-
 </html>
