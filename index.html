@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="module"
+src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+</script>
+
+<style>
+
+body{
+background:black;
+color:white;
+font-family:sans-serif;
+text-align:center;
+margin:0;
+}
+
+h1{
+font-size:44px;
+letter-spacing:5px;
+margin-top:20px;
+}
+
+button{
+padding:12px 22px;
+margin:8px;
+border:none;
+border-radius:22px;
+background:#00f0ff;
+color:black;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>EYEAI.CO</h1>
+<p>Realistic AR Robots</p>
+
+<button onclick="r1()">TITAN-01</button>
+<button onclick="r2()">MECHA-XR</button>
+<button onclick="r3()">CYBER-ALPHA</button>
+<button onclick="r4()">NOVA-CORE</button>
+<button onclick="r5()">QUANTUM-BOT</button>
+<button onclick="r6()">OMEGA-UNIT</button>
+<button onclick="r7()">META-AI</button>
+<button onclick="r8()">ATLAS-X</button>
+
+<model-viewer
+id="viewer"
+src="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb"
+ios-src="https://modelviewer.dev/shared-assets/models/NeilArmstrong.usdz"
+ar
+ar-modes="scene-viewer webxr quick-look"
+camera-controls
+auto-rotate
+shadow-intensity="1"
+style="width:100%; height:70vh;">
+</model-viewer>
+
+<script>
+
+function r1(){
+viewer.src="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb";
+viewer.setAttribute("ios-src","https://modelviewer.dev/shared-assets/models/NeilArmstrong.usdz");
+}
+
+function r2(){
+viewer.src="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb";
+viewer.setAttribute("ios-src","https://modelviewer.dev/shared-assets/models/NeilArmstrong.usdz");
+}
+
+function r3(){
+viewer.src="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb";
+viewer.setAttribute("ios-src","https://modelviewer.dev/shared-assets/models/NeilArmstrong.usdz");
+}
+
+function r4(){
+viewer.src="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb";
+viewer.setAttribute("ios-src","https://modelviewer.dev/shared-assets/models/NeilArmstrong.usdz");
+}
+
+function r5(){
+viewer.src="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb";
+viewer.setAttribute("ios-src","https://modelviewer.dev/shared-assets/models/NeilArmstrong.usdz");
+}
+
+function r6(){
+viewer.src="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb";
+viewer.setAttribute("ios-src","https://modelviewer.dev/shared-assets/models/NeilArmstrong.usdz");
+}
+
+function r7(){
+viewer.src="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb";
+viewer.setAttribute("ios-src","https://modelviewer.dev/shared-assets/models/NeilArmstrong.usdz");
+}
+
+function r8(){
+viewer.src="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb";
+viewer.setAttribute("ios-src","https://modelviewer.dev/shared-assets/models/NeilArmstrong.usdz");
+}
+
+</script>
+
+</body>
+</html>
